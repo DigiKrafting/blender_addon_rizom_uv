@@ -30,35 +30,35 @@ def ds_u3d_get_export_path():
 
     return _export_path
 
-def ds_u3d_obj_filename(self, context):
+def ds_u3d_filename(self, context):
 
     _object_name = bpy.context.scene.objects.active.name
     _export_path = ds_u3d_get_export_path()
-    _export_file = _export_path + _object_name + '.obj'
+    _export_file = _export_path + _object_name + '_u3d.fbx'
 
     if not bpy.context.user_preferences.addons[__package__].preferences.option_save_before_export:
         bpy.ops.wm.save_mainfile()
 
     return _export_file
 
-def ds_u3d_obj_export(self, context):
+def ds_u3d_fbx_export(self, context):
 
-    _export_file = ds_u3d_obj_filename(self, context)
+    _export_file = ds_u3d_filename(self, context)
 
     bpy.ops.object.mode_set(mode='OBJECT')
     
-    bpy.ops.export_scene.obj(filepath=_export_file, check_existing=False, use_selection=True, axis_forward='-Z', axis_up='Y', use_normals=True, use_uvs=True, use_materials=True, global_scale = 1.0)
+    bpy.ops.export_scene.fbx(filepath=_export_file, use_selection=True, check_existing=False, axis_forward='-Z', axis_up='Y', filter_glob="*.fbx", version='BIN7400', ui_tab='MAIN', global_scale=1.0, apply_unit_scale=True, bake_space_transform=False, object_types={'MESH'}, use_mesh_modifiers=True, mesh_smooth_type='OFF', use_mesh_edges=False, use_tspace=False, use_custom_props=False, add_leaf_bones=False, primary_bone_axis='Y', secondary_bone_axis='X', use_armature_deform_only=False, bake_anim=True, bake_anim_use_all_bones=True, bake_anim_use_nla_strips=True, bake_anim_use_all_actions=True, bake_anim_force_startend_keying=True, bake_anim_step=1.0, bake_anim_simplify_factor=1.0, use_anim=True, use_anim_action_all=True, use_default_take=True, use_anim_optimize=True, anim_optimize_precision=6.0, path_mode='AUTO', embed_textures=False, batch_mode='OFF', use_batch_own_dir=True, use_metadata=True)
 
     return _export_file
 
-class ds_u3d_obj_export_execute(bpy.types.Operator):
+class ds_u3d_fbx_export_execute(bpy.types.Operator):
 
     bl_idname = "ds_u3d.obj_export"
     bl_label = "Export OBJ."
 
     def execute(self, context):
 
-        _export_file = ds_u3d_obj_export(self, context)
+        _export_file = ds_u3d_fbx_export(self, context)
 
         return {'FINISHED'}
 
@@ -69,7 +69,7 @@ class ds_u3d_export(bpy.types.Operator):
 
     def execute(self, context):
 
-        _export_file = ds_u3d_obj_export(self, context)
+        _export_file = ds_u3d_fbx_export(self, context)
 
         Popen([bpy.context.user_preferences.addons[__package__].preferences.option_u3d_exe,_export_file])
 
@@ -85,7 +85,8 @@ class ds_u3d_import(bpy.types.Operator):
         obj_selected = bpy.context.object
         bpy.ops.object.mode_set(mode='OBJECT')
 
-        bpy.ops.import_scene.obj(filepath = ds_u3d_obj_filename(self, context), axis_forward='-Z', axis_up='Y', use_edges=True, use_smooth_groups=True, use_split_objects=True, use_split_groups=True, use_groups_as_vgroups=False, use_image_search=False, split_mode='OFF', global_clamp_size=0.0)
+        bpy.ops.import_scene.fbx(filepath = ds_u3d_filename(self, context), axis_forward='-Z', axis_up='Y')
+
         obj_imported =  bpy.context.selected_objects[0]
 
         obj_imported.select = True
@@ -126,7 +127,7 @@ def register():
 
     from bpy.utils import register_class
 
-    register_class(ds_u3d_obj_export_execute)
+    register_class(ds_u3d_fbx_export_execute)
 
     register_class(ds_u3d_import)
     register_class(ds_u3d_export)
@@ -151,7 +152,7 @@ def unregister():
     bpy.types.INFO_MT_file_import.remove(ds_u3d_menu_func_import)
     bpy.types.INFO_MT_file_export.remove(ds_u3d_menu_func_export)
 
-    unregister_class(ds_u3d_obj_export_execute)
+    unregister_class(ds_u3d_fbx_export_execute)
 
     unregister_class(ds_u3d_import)
     unregister_class(ds_u3d_export)

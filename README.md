@@ -4,8 +4,8 @@ Bridge/Pipeline/Workflow import/export for Unfold3D.
 
 # Features
 
-- One click Unfold3D OBJ Export (Exports selected object to export folder and opens file in Unfold3D)
-- One click Unfold3D OBJ Import (Imports exported obj and transfer UV data on selected object)
+- One click Unfold3D FBX Export (Exports selected object to export folder and opens file in Unfold3D)
+- One click Unfold3D FBX Import (Imports exported FBX and transfers UV data on selected object)
 
 # Required Blender Version
 
