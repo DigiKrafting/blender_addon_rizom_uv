@@ -106,7 +106,7 @@ class ds_u3d_import(bpy.types.Operator):
         obj_selected.select = True
 
         bpy.ops.object.mode_set(mode='EDIT')
-        bpy.ops.uv.seams_from_islands(mark_seams=False, mark_sharp=False)
+        bpy.ops.uv.seams_from_islands(mark_seams=True, mark_sharp=False)
         bpy.ops.object.mode_set(mode='OBJECT')
 
         return {'FINISHED'}

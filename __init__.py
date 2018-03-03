@@ -20,7 +20,7 @@ bl_info = {
         "name": "Unfold3D",
         "description": "Unfold3D Bridge",
         "author": "Digiography.Studio",
-        "version": (0, 0, 5),
+        "version": (0, 1, 0),
         "blender": (2, 79, 0),
         "location": "Info Toolbar, File -> Import, File -> Export",
         "wiki_url":    "https://github.com/Digiography/blender_addon_unfold3d/wiki",
