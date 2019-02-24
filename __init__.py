@@ -17,43 +17,42 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-        "name": "Unfold3D",
-        "description": "Unfold3D Bridge",
+        "name": "RizomUV",
+        "description": "RizomUV Bridge",
         "author": "Digiography.Studio",
-        "version": (0, 1, 0),
-        "blender": (2, 79, 0),
+        "version": (0, 1, 1),
+        "blender": (2, 80, 0),
         "location": "Info Toolbar, File -> Import, File -> Export",
-        "wiki_url":    "https://github.com/Digiography/blender_addon_unfold3d/wiki",
-        "tracker_url": "https://github.com/Digiography/blender_addon_unfold3d/issues",
-        "category": "System",
+        "wiki_url":    "https://github.com/Digiography/blender_addon_rizom_uv/wiki",
+        "tracker_url": "https://github.com/Digiography/blender_addon_rizom_uv/issues",
+        "category": "Import-Export",
 }
 
 import bpy
+from bpy.utils import register_class, unregister_class
+from . import ds_ruv
 
-from . import ds_u3d
-
-class ds_u3d_addon_prefs(bpy.types.AddonPreferences):
+class ds_ruv_addon_prefs(bpy.types.AddonPreferences):
 
         bl_idname = __package__
 
-        option_u3d_exe = bpy.props.StringProperty(
-                name="Unfold3D Executable",
+        option_ruv_exe : bpy.props.StringProperty(
+                name="RizomUV Executable",
                 subtype='FILE_PATH',
-                default=r"C:\Program Files\Rizom Lab\Unfold3D VS RS 2017.0\unfold3d.exe",
+                default=r"C:\Program Files\Rizom Lab\RizomUV VS RS 2018.0\rizomuv.exe",
         )     
-        option_export_folder = bpy.props.StringProperty(
+        option_export_folder : bpy.props.StringProperty(
                 name="Export Folder Name",
                 default="eXport",
         )  
-        option_save_before_export = bpy.props.BoolProperty(
+        option_save_before_export : bpy.props.BoolProperty(
                 name="Save Before Export",
                 default=True,
         )     
-        options_display_types = [('Buttons', "Buttons", "Buttons"),('Menu', "Menu", "Menu"),('Hide', "Hide", "Hide"),]        
-        option_display_type = bpy.props.EnumProperty(
-                items=options_display_types,
+        option_display_type : bpy.props.EnumProperty(
+                items=[('Default', "Default", "Default"),('Menu', "Menu", "Menu"),('Buttons', "Buttons", "Buttons"),],
                 name="Display Type",
-                default='Buttons',
+                default='Default',
         )
         def draw(self, context):
 
@@ -61,68 +60,75 @@ class ds_u3d_addon_prefs(bpy.types.AddonPreferences):
 
                 box=layout.box()
                 box.prop(self, 'option_display_type')
-                box.prop(self, 'option_u3d_exe')
+                box.prop(self, 'option_ruv_exe')
                 box=layout.box()
                 box.prop(self, 'option_export_folder')
-                box.label('Automatically created as a sub folder relative to the saved .blend file. * Do NOT include any "\\".',icon='INFO')
+                box.label(text='Automatically created as a sub folder relative to the saved .blend file. * Do NOT include any "\\".',icon='INFO')
                 box.prop(self, 'option_save_before_export')
 
-class ds_u3d_prefs_open(bpy.types.Operator):
-
-    bl_idname = "ds_u3d.prefs_open"
-    bl_label = "Open Preferences"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
- 
-    def execute(self, context):
-        
-        bpy.ops.screen.userpref_show('INVOKE_DEFAULT')
-
-        return {'FINISHED'}
-
-class ds_u3d_menu(bpy.types.Menu):
+class ds_ruv_menu(bpy.types.Menu):
 
     bl_label = " " + bl_info['name']
-    bl_idname = "ds_u3d.menu"
+    bl_idname = "ds_ruv.menu"
 
     def draw(self, context):
             
         layout = self.layout
 
-        self.layout.operator('ds_u3d.export',icon="EXPORT")
-        self.layout.operator('ds_u3d.import',icon="IMPORT")
+        self.layout.operator('ds_ruv.export',icon="EXPORT")
+        self.layout.operator('ds_ruv.import',icon="IMPORT")
 
-def draw_ds_u3d_menu(self, context):
+def draw_ds_ruv_menu(self, context):
 
         layout = self.layout
-        layout.menu(ds_u3d_menu.bl_idname,icon="COLLAPSEMENU")
+        layout.menu(ds_ruv_menu.bl_idname,icon="COLLAPSEMENU")
+
+def ds_ruv_menu_func_export(self, context):
+    self.layout.operator("ds_ruv.export")
+
+def ds_ruv_menu_func_import(self, context):
+    self.layout.operator("ds_ruv.import")
+
+def ds_ruv_draw_btns(self, context):
+    
+    if context.region.alignment != 'RIGHT':
+
+        layout = self.layout
+        row = layout.row(align=True)
+        row.operator('ds_ruv.export',text="RUV",icon="EXPORT")
+        row.operator('ds_ruv.import',text="RUV",icon="IMPORT")
+
+classes = (
+    ds_ruv_addon_prefs,
+)
 
 def register():
 
-        from bpy.utils import register_class
+    for cls in classes:
+        register_class(cls)
 
-        register_class(ds_u3d_addon_prefs)
-        register_class(ds_u3d_prefs_open)
+    ds_ruv.register()
 
-        if bpy.context.user_preferences.addons[__package__].preferences.option_display_type=='Menu':
-                register_class(ds_u3d_menu)
-                bpy.types.INFO_HT_header.append(draw_ds_u3d_menu)
+    bpy.types.TOPBAR_MT_file_export.append(ds_ruv_menu_func_export)
+    bpy.types.TOPBAR_MT_file_import.append(ds_ruv_menu_func_import)
 
-        ds_u3d.register()
+    if bpy.context.preferences.addons[__package__].preferences.option_display_type=='Buttons':
+    
+        bpy.types.TOPBAR_HT_upper_bar.append(ds_ruv_draw_btns)
 
 def unregister():
 
-        from bpy.utils import unregister_class
+    bpy.types.TOPBAR_MT_file_import.remove(ds_ruv_menu_func_import)
+    bpy.types.TOPBAR_MT_file_export.remove(ds_ruv_menu_func_export)
+    
+    if bpy.context.preferences.addons[__package__].preferences.option_display_type=='Buttons':
 
-        if bpy.context.user_preferences.addons[__package__].preferences.option_display_type=='Menu':
+        bpy.types.TOPBAR_HT_upper_bar.remove(ds_ruv_draw_btns)
 
-                bpy.types.INFO_HT_header.remove(draw_ds_u3d_menu)
-                unregister_class(ds_u3d_menu)
+    ds_ruv.unregister()
 
-        ds_u3d.unregister()
-
-        unregister_class(ds_u3d_addon_prefs)
-        unregister_class(ds_u3d_prefs_open)
+    for cls in reversed(classes):
+        unregister_class(cls)
 
 if __name__ == "__main__":
 

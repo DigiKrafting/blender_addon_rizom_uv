@@ -1,6 +1,8 @@
-# Blender Addon Unfold3D
+# Blender Addon RizomUV
 
-Bridge/Pipeline/Workflow import/export for Unfold3D.
+Bridge/Pipeline/Workflow import/export for RizomUV.
+
+\* Updated to Blender 2.80.0 Beta
 
 # Features
 
@@ -9,8 +11,13 @@ Bridge/Pipeline/Workflow import/export for Unfold3D.
 
 # Required Blender Version
 
-2.79.0
+blender_addon_rizom_uv 0.1.1+
 
+2.80.0
+
+Prior to blender_addon_rizom_uv 0.1.1
+
+2.79.0
 \* Will likely work in previous versions but untested.
 
 # IMPORTANT USAGE NOTES 
