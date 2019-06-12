@@ -44,6 +44,8 @@ Installing an Addon in Blender
 
 ![alt](/screenshots/ruv_import.png)
 
+![alt](/screenshots/ruv_imported.png)
+
 ![alt](/screenshots/ruv_btns.png)
 
 ![alt](/screenshots/ruv_menu.png)
