@@ -20,7 +20,7 @@ bl_info = {
         "name": "RizomUV",
         "description": "RizomUV Bridge",
         "author": "Digiography.Studio",
-        "version": (0, 1, 1),
+        "version": (0, 1, 2),
         "blender": (2, 80, 0),
         "location": "Info Toolbar, File -> Import, File -> Export",
         "wiki_url":    "https://github.com/Digiography/blender_addon_rizom_uv/wiki",
@@ -50,9 +50,9 @@ class ds_ruv_addon_prefs(bpy.types.AddonPreferences):
                 default=True,
         )     
         option_display_type : bpy.props.EnumProperty(
-                items=[('Default', "Default", "Default"),('Menu', "Menu", "Menu"),('Buttons', "Buttons", "Buttons"),],
+                items=[('Buttons', "Buttons", "Use Buttons"),('Menu', "Menu", "Append a Menu to Main Menu"),('Hide', "Import/Export", "Use only Import/Export Menu's"),],
                 name="Display Type",
-                default='Default',
+                default='Buttons',
         )
         def draw(self, context):
 
@@ -78,7 +78,7 @@ class ds_ruv_menu(bpy.types.Menu):
         self.layout.operator('ds_ruv.export',icon="EXPORT")
         self.layout.operator('ds_ruv.import',icon="IMPORT")
 
-def draw_ds_ruv_menu(self, context):
+def ds_draw_ruv_menu(self, context):
 
         layout = self.layout
         layout.menu(ds_ruv_menu.bl_idname,icon="COLLAPSEMENU")
@@ -116,6 +116,11 @@ def register():
     
         bpy.types.TOPBAR_HT_upper_bar.append(ds_ruv_draw_btns)
 
+    elif bpy.context.preferences.addons[__package__].preferences.option_display_type=='Menu':
+
+        register_class(ds_ruv_menu)
+        bpy.types.TOPBAR_MT_editor_menus.append(ds_draw_ruv_menu)
+        
 def unregister():
 
     bpy.types.TOPBAR_MT_file_import.remove(ds_ruv_menu_func_import)
