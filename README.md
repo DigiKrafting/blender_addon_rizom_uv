@@ -30,7 +30,7 @@ Prior to blender_addon_rizom_uv 0.1.1
 
 # Installation
 
-Download either the tar.gz or zip from [https://github.com/DigiKrafting/blender_addon_unfold3d/releases/latest](https://github.com/DigiKrafting/blender_addon_unfold3d/releases/latest)
+Download either the tar.gz or zip from [https://github.com/DigiKrafting/blender_addon_rizom_uv/releases/latest](https://github.com/DigiKrafting/blender_addon_rizom_uv/releases/latest)
 
 Installing an Addon in Blender
 
