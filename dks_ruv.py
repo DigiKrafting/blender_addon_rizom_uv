@@ -21,7 +21,7 @@ from bpy.utils import register_class, unregister_class
 from subprocess import Popen
 from os import system, path, makedirs
 
-def ds_ruv_get_export_path():
+def dks_ruv_get_export_path():
 
     _export_path = bpy.path.abspath('//') + bpy.context.preferences.addons[__package__].preferences.option_export_folder + '\\'
 
@@ -30,20 +30,20 @@ def ds_ruv_get_export_path():
 
     return _export_path
 
-def ds_ruv_filename(self, context):
+def dks_ruv_filename(self, context):
 
     _object_name = bpy.context.active_object.name
-    _export_path = ds_ruv_get_export_path()
+    _export_path = dks_ruv_get_export_path()
     _export_file = _export_path + _object_name + '_ruv.fbx'
 
-    if not bpy.context.preferences.addons[__package__].preferences.option_save_before_export:
+    if bpy.context.preferences.addons[__package__].preferences.option_save_before_export:
         bpy.ops.wm.save_mainfile()
 
     return _export_file
 
-def ds_ruv_fbx_export(self, context):
+def dks_ruv_fbx_export(self, context):
 
-    _export_file = ds_ruv_filename(self, context)
+    _export_file = dks_ruv_filename(self, context)
 
     bpy.ops.object.mode_set(mode='OBJECT')
     
@@ -51,34 +51,34 @@ def ds_ruv_fbx_export(self, context):
 
     return _export_file
 
-class ds_ruv_fbx_export_execute(bpy.types.Operator):
+class dks_ruv_fbx_export_execute(bpy.types.Operator):
 
-    bl_idname = "ds_ruv.obj_export"
+    bl_idname = "dks_ruv.obj_export"
     bl_label = "Export FBX."
 
     def execute(self, context):
 
-        _export_file = ds_ruv_fbx_export(self, context)
+        _export_file = dks_ruv_fbx_export(self, context)
 
         return {'FINISHED'}
 
-class ds_ruv_export(bpy.types.Operator):
+class dks_ruv_export(bpy.types.Operator):
 
-    bl_idname = "ds_ruv.export"
+    bl_idname = "dks_ruv.export"
     bl_label = "RizomUV"
     bl_description = "Export to RizomUV"
 
     def execute(self, context):
 
-        _export_file = ds_ruv_fbx_export(self, context)
+        _export_file = dks_ruv_fbx_export(self, context)
 
         Popen([bpy.context.preferences.addons[__package__].preferences.option_ruv_exe,_export_file])
 
         return {'FINISHED'}
 
-class ds_ruv_import(bpy.types.Operator):
+class dks_ruv_import(bpy.types.Operator):
 
-    bl_idname = "ds_ruv.import"
+    bl_idname = "dks_ruv.import"
     bl_label = "RizomUV"
     bl_description = "Import from RizomUV"
 
@@ -87,7 +87,7 @@ class ds_ruv_import(bpy.types.Operator):
         obj_selected = bpy.context.object
         bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 
-        bpy.ops.import_scene.fbx(filepath = ds_ruv_filename(self, context), axis_forward='-Z', axis_up='Y')
+        bpy.ops.import_scene.fbx(filepath = dks_ruv_filename(self, context), axis_forward='-Z', axis_up='Y')
 
         obj_imported = bpy.context.selected_objects[0]
 
@@ -111,9 +111,9 @@ class ds_ruv_import(bpy.types.Operator):
         return {'FINISHED'}
 
 classes = (
-    ds_ruv_fbx_export_execute,
-    ds_ruv_import,
-    ds_ruv_export,
+    dks_ruv_fbx_export_execute,
+    dks_ruv_import,
+    dks_ruv_export,
 )
 
 def register():

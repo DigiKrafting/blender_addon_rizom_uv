@@ -17,22 +17,22 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-        "name": "RizomUV",
+        "name": "DKS RizomUV",
         "description": "RizomUV Bridge",
-        "author": "Digiography.Studio",
-        "version": (0, 1, 2),
+        "author": "DigiKrafting.Studio",
+        "version": (0, 5, 0),
         "blender": (2, 80, 0),
         "location": "Info Toolbar, File -> Import, File -> Export",
-        "wiki_url":    "https://github.com/Digiography/blender_addon_rizom_uv/wiki",
-        "tracker_url": "https://github.com/Digiography/blender_addon_rizom_uv/issues",
+        "wiki_url":    "https://github.com/DigiKrafting/blender_addon_rizom_uv/wiki",
+        "tracker_url": "https://github.com/DigiKrafting/blender_addon_rizom_uv/issues",
         "category": "Import-Export",
 }
 
 import bpy
 from bpy.utils import register_class, unregister_class
-from . import ds_ruv
+from . import dks_ruv
 
-class ds_ruv_addon_prefs(bpy.types.AddonPreferences):
+class dks_ruv_addon_prefs(bpy.types.AddonPreferences):
 
         bl_idname = __package__
 
@@ -66,40 +66,40 @@ class ds_ruv_addon_prefs(bpy.types.AddonPreferences):
                 box.label(text='Automatically created as a sub folder relative to the saved .blend file. * Do NOT include any "\\".',icon='INFO')
                 box.prop(self, 'option_save_before_export')
 
-class ds_ruv_menu(bpy.types.Menu):
+class dks_ruv_menu(bpy.types.Menu):
 
     bl_label = " " + bl_info['name']
-    bl_idname = "ds_ruv.menu"
+    bl_idname = "dks_ruv.menu"
 
     def draw(self, context):
             
         layout = self.layout
 
-        self.layout.operator('ds_ruv.export',icon="EXPORT")
-        self.layout.operator('ds_ruv.import',icon="IMPORT")
+        self.layout.operator('dks_ruv.export',icon="EXPORT")
+        self.layout.operator('dks_ruv.import',icon="IMPORT")
 
-def ds_draw_ruv_menu(self, context):
+def dks_draw_ruv_menu(self, context):
 
         layout = self.layout
-        layout.menu(ds_ruv_menu.bl_idname,icon="COLLAPSEMENU")
+        layout.menu(dks_ruv_menu.bl_idname,icon="COLLAPSEMENU")
 
-def ds_ruv_menu_func_export(self, context):
-    self.layout.operator("ds_ruv.export")
+def dks_ruv_menu_func_export(self, context):
+    self.layout.operator("dks_ruv.export")
 
-def ds_ruv_menu_func_import(self, context):
-    self.layout.operator("ds_ruv.import")
+def dks_ruv_menu_func_import(self, context):
+    self.layout.operator("dks_ruv.import")
 
-def ds_ruv_draw_btns(self, context):
+def dks_ruv_draw_btns(self, context):
     
     if context.region.alignment != 'RIGHT':
 
         layout = self.layout
         row = layout.row(align=True)
-        row.operator('ds_ruv.export',text="RUV",icon="EXPORT")
-        row.operator('ds_ruv.import',text="RUV",icon="IMPORT")
+        row.operator('dks_ruv.export',text="RUV",icon="EXPORT")
+        row.operator('dks_ruv.import',text="RUV",icon="IMPORT")
 
 classes = (
-    ds_ruv_addon_prefs,
+    dks_ruv_addon_prefs,
 )
 
 def register():
@@ -107,30 +107,30 @@ def register():
     for cls in classes:
         register_class(cls)
 
-    ds_ruv.register()
+    dks_ruv.register()
 
-    bpy.types.TOPBAR_MT_file_export.append(ds_ruv_menu_func_export)
-    bpy.types.TOPBAR_MT_file_import.append(ds_ruv_menu_func_import)
+    bpy.types.TOPBAR_MT_file_export.append(dks_ruv_menu_func_export)
+    bpy.types.TOPBAR_MT_file_import.append(dks_ruv_menu_func_import)
 
     if bpy.context.preferences.addons[__package__].preferences.option_display_type=='Buttons':
     
-        bpy.types.TOPBAR_HT_upper_bar.append(ds_ruv_draw_btns)
+        bpy.types.TOPBAR_HT_upper_bar.append(dks_ruv_draw_btns)
 
     elif bpy.context.preferences.addons[__package__].preferences.option_display_type=='Menu':
 
-        register_class(ds_ruv_menu)
-        bpy.types.TOPBAR_MT_editor_menus.append(ds_draw_ruv_menu)
+        register_class(dks_ruv_menu)
+        bpy.types.TOPBAR_MT_editor_menus.append(dks_draw_ruv_menu)
         
 def unregister():
 
-    bpy.types.TOPBAR_MT_file_import.remove(ds_ruv_menu_func_import)
-    bpy.types.TOPBAR_MT_file_export.remove(ds_ruv_menu_func_export)
+    bpy.types.TOPBAR_MT_file_import.remove(dks_ruv_menu_func_import)
+    bpy.types.TOPBAR_MT_file_export.remove(dks_ruv_menu_func_export)
     
     if bpy.context.preferences.addons[__package__].preferences.option_display_type=='Buttons':
 
-        bpy.types.TOPBAR_HT_upper_bar.remove(ds_ruv_draw_btns)
+        bpy.types.TOPBAR_HT_upper_bar.remove(dks_ruv_draw_btns)
 
-    ds_ruv.unregister()
+    dks_ruv.unregister()
 
     for cls in reversed(classes):
         unregister_class(cls)
