@@ -20,7 +20,7 @@ bl_info = {
         "name": "DKS RizomUV",
         "description": "RizomUV Bridge",
         "author": "DigiKrafting.Studio",
-        "version": (0, 5, 0),
+        "version": (0, 6, 0),
         "blender": (2, 80, 0),
         "location": "Info Toolbar, File -> Import, File -> Export",
         "wiki_url":    "https://github.com/DigiKrafting/blender_addon_rizom_uv/wiki",

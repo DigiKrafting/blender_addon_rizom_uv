@@ -2,12 +2,10 @@
 
 Bridge/Pipeline/Workflow import/export for RizomUV.
 
-\* Updated to Blender 2.80.0 Beta
-
 # Features
 
-- One click Unfold3D FBX Export (Exports selected object to export folder and opens file in Unfold3D)
-- One click Unfold3D FBX Import (Imports exported FBX and transfers UV data on selected object)
+- One click RizomUV FBX Export (Exports selected object to export folder and opens file in RizomUV)
+- One click RizomUV FBX Import (Imports exported FBX and transfers UV data on selected object)
 
 # Required Blender Version
 
